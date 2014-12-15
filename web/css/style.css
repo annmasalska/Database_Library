@@ -1,0 +1,123 @@
+
+
+.form{
+    width: 400px;
+
+    background: #f6f6f6;
+    margin: 0px auto;
+    padding-top: 20px;
+    margin-top: 50px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#mymenu
+{
+    display: block;
+    width: 309px;
+    height: 35px;
+    margin: 15px auto;
+    background: #fff;
+    border: 0px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+
+}
+#mymenu option
+{
+    background: #fff;
+    border: 0px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+
+}
+
+input[type="text"]{
+    display: block;
+    width: 309px;
+    height: 35px;
+    margin: 15px auto;
+    background: #fff;
+    border: 0px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+input[type="text"]:focus{
+    border: 2px solid #1abc9c
+}
+input[type="password"]{
+    display: block;
+    width: 309px;
+    height: 35px;
+    margin: 15px auto;
+    background: #fff;
+    border: 0px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+input[type="password"]:focus{
+    border: 2px solid #1abc9c
+}
+input[type="submit"]{
+    display: block;
+    background: #1abc9c;
+    width: 314px;
+    padding: 12px;
+
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: #fff;
+    border: 0px;
+    margin: auto;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    font-size: 17px;
+    transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover{
+    background: #09cca6
+}
+
+
+
+
+::-webkit-input-placeholder {
+    color: gray;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: gray;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    color: gray;
+}
+
+:-ms-input-placeholder {
+    color: gray;
+}
