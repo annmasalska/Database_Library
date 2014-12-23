@@ -23,8 +23,9 @@
                         </li>
                     </c:if>
                     <c:if test="${ not empty role}">
-                        <li id="role">  <fmt:message key="user" bundle="${ rb }"/> : ${role} </li>
-                        <li><a href=href="controller?command=logout> <fmt:message key="label.logout" bundle="${ rb }"/> </a></li>
+                        <li id="role"><fmt:message key="user" bundle="${ rb }"/> : ${role} </li>
+                        <li><a href=href="controller?command=logout> <fmt:message key="label.logout"
+                                                                                  bundle="${ rb }"/> </a></li>
                     </c:if>
 
                 </ul>

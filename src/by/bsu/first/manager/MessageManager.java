@@ -3,16 +3,14 @@ package by.bsu.first.manager;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public enum  MessageManager {
-    EN(ResourceBundle.getBundle("resources.messages", new Locale("en", "EN"))),
-    RU(ResourceBundle.getBundle("resources.messages", new Locale("ru", "RU")));
-    private ResourceBundle bundle;
+public  class  MessageManager {
 
-    MessageManager(ResourceBundle bundle){
-        this.bundle = bundle;
-    }
+    private static ResourceBundle bundle;
 
-    public String getMessage(String key) {
+    public static String getMessage(String key,String locale) {
+        if(locale==null ) bundle= ResourceBundle.getBundle("resources.messages",new Locale("ru"));
+        bundle= ResourceBundle.getBundle("resources.messages",new Locale(locale));
         return bundle.getString(key);
+
     }
 }

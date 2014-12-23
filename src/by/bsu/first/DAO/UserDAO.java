@@ -2,7 +2,7 @@ package by.bsu.first.DAO;
 
 import by.bsu.first.entity.User;
 import by.bsu.first.exceptions.ConnectionPoolException;
-import by.bsu.first.exceptions.DAOCommand;
+import by.bsu.first.exceptions.DAOCommandException;
 import by.bsu.first.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -12,12 +12,14 @@ import java.util.List;
 
 public class UserDAO extends AbstractDAO<User> {
 
-    public static final String SQL_SELECT_ALL_USERS = "SELECT * FROM users";
-    public static final String SQL_INSERT_NEW_USER = "INSERT INTO users(id, username, password) VALUES(?, ?, ?)";
     static Logger logger = Logger.getLogger(UserDAO.class);
 
-    @Override
-    public List<User> findAll() throws DAOCommand {
+    public static final String SQL_SELECT_ALL_USERS = "SELECT * FROM users";
+    public static final String SQL_INSERT_NEW_USER = "INSERT INTO users(id, username, password) VALUES(?, ?, ?)";
+    public static final String SQL_SELECT_ID = "SELECT id FROM users WHERE username = ? ";
+
+    //@Override
+    public List<User> findAll() throws DAOCommandException {
         List<User> users = new ArrayList<User>();
         Connection cn = null;
         Statement st = null;
@@ -37,12 +39,10 @@ public class UserDAO extends AbstractDAO<User> {
             }
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
-        }
-        catch (ConnectionPoolException e) {
-            throw new DAOCommand(e.getCause());
+        } catch (ConnectionPoolException e) {
+            throw new DAOCommandException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
-        }
-        finally {
+        } finally {
             try {
                 st.close();
             } catch (SQLException e) {
@@ -56,7 +56,35 @@ public class UserDAO extends AbstractDAO<User> {
         return users;
     }
 
-    public void addUser(int IDcard, String username, String passValue) throws DAOCommand {
+    public int findIdByUsername(String currentRole) throws DAOCommandException {
+
+
+        Connection cn = null;
+        ConnectionPool pool = ConnectionPool.getPool();
+        PreparedStatement ps = null;
+        int id = 0;
+        try {
+            cn = pool.getConnection();
+            ps = cn.prepareStatement(SQL_SELECT_ID);
+            ps.setString(1, currentRole);
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                id = resultSet.getInt("id");
+            }
+
+        } catch (SQLException e) {
+            logger.error("SQL exception (request or table failed): " + e);
+        } catch (ConnectionPoolException e) {
+            throw new DAOCommandException(e.getCause());
+
+        } finally {
+            close(ps);
+            pool.returnConnection(cn);
+        }
+        return id;
+    }
+
+    public void addUser(int IDcard, String username, String passValue) throws DAOCommandException {
 
         Connection cn = null;
         Statement st = null;
@@ -75,12 +103,10 @@ public class UserDAO extends AbstractDAO<User> {
         } catch (SQLException e) {
 
             logger.error("SQL exception (request or table failed): " + e);
-        }
-        catch (ConnectionPoolException e) {
-            throw new DAOCommand(e.getCause());
+        } catch (ConnectionPoolException e) {
+            throw new DAOCommandException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
-        }
-        finally {
+        } finally {
             close(ps);
             pool.returnConnection(cn);
 

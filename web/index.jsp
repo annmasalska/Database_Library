@@ -26,11 +26,15 @@
                 <li><a href="/jsp/addBook.jsp" accesskey="2" title=""><fmt:message key="add.book" bundle="${ rb }"/></a></li>
                 <li><a href="controller?command=delete" accesskey="3" title=""><fmt:message key="delete.book" bundle="${ rb }"/></a></li>
                 <li><a href="/jsp/addReader.jsp" accesskey="4" title=""><fmt:message key="add.reader" bundle="${ rb }"/></a></li>
+                <li><a href="/jsp/addBorrowInfo.jsp" accesskey="5" title=""><fmt:message key="addborrow" bundle="${ rb }"/></a></li>
             </c:if>
             <c:if test="${ not empty role }">
             <c:if test="${role ne 'administrator' }">
                 <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue" bundle="${ rb }"/></a></li>
-                <li><a href="#" accesskey="2" title=""><fmt:message key="issue.books" bundle="${ rb }"/> </a></li>
+
+              <li><a href="controller?command=selectborrowinfobyusername" accesskey="2" title=""><fmt:message key="issue.books" bundle="${ rb }"/> </a></li>
+                <li ><a href="controller?command=order" accesskey="3" title=""><fmt:message
+                        key="order" bundle="${ rb }"/></a></li>
             </c:if>
             </c:if>
             <c:if test="${ empty role }">
@@ -42,6 +46,8 @@
         </ul>
     </div>
 </div>
+
+${successMessage}
 <c:import url="/jsp/fragment/footer.jsp"></c:import>
 </body>
 </html>

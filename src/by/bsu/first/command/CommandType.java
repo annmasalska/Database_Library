@@ -9,7 +9,11 @@ public enum CommandType {
     DELETE(new DeleteBookCommand()),
     LOCALE(new LocaleCommand()),
     ADDREADER(new AddReaderCommand()),
-    SELECTBYGENRE(new SelectBooksByGenreCommand());
+    SELECTBYGENRE(new SelectBooksByGenreCommand()),
+    SELECTBORROWINFOBYUSERNAME(new SelectBorrowInfoByUsername()),
+    ADDBORROWINFO(new AddBorrowInfoCommand()),
+    SEARCHBYAUTHOR(new SearchCommand()),
+    ORDER(new OrderCommand());
 
     private Command command;
 

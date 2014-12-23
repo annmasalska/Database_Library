@@ -2,7 +2,7 @@ package by.bsu.first.DAO;
 
 import by.bsu.first.entity.Reader;
 import by.bsu.first.exceptions.ConnectionPoolException;
-import by.bsu.first.exceptions.DAOCommand;
+import by.bsu.first.exceptions.DAOCommandException;
 import by.bsu.first.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -17,7 +17,7 @@ public class ReaderDAO extends AbstractDAO<Reader> {
     public static final String SQL_INSERT_NEW_READER = "INSERT INTO readers(idcard, lastname,name,secondname,address,phone) VALUES(?, ?, ?, ?,?,?)";
     static Logger logger = Logger.getLogger(ReaderDAO.class);
 
-    @Override
+   // @Override
     public List<Reader> findAll() {
         List<Reader> readers = new ArrayList<Reader>();
         Connection cn = null;
@@ -59,7 +59,7 @@ public class ReaderDAO extends AbstractDAO<Reader> {
         return readers;
     }
 
-    public void addReader(int idcard, String lastname, String name, String secondname, String address, String phone) throws DAOCommand {
+    public void addReader(int idcard, String lastname, String name, String secondname, String address, String phone) throws DAOCommandException {
 
         Connection cn = null;
         Statement st = null;
@@ -80,12 +80,10 @@ public class ReaderDAO extends AbstractDAO<Reader> {
 
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
-        }
-        catch (ConnectionPoolException e) {
-            throw new DAOCommand(e.getCause());
+        } catch (ConnectionPoolException e) {
+            throw new DAOCommandException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
-        }
-        finally {
+        } finally {
             close(ps);
             pool.returnConnection(cn);
 

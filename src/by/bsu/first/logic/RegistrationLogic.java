@@ -3,7 +3,7 @@ import by.bsu.first.DAO.ReaderDAO;
 import by.bsu.first.DAO.UserDAO;
 import by.bsu.first.entity.Reader;
 import by.bsu.first.entity.User;
-import by.bsu.first.exceptions.DAOCommand;
+import by.bsu.first.exceptions.DAOCommandException;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ public class RegistrationLogic {
         List<User> lst= null;
         try {
             lst = dao.findAll();
-        } catch (DAOCommand daoCommand) {
-            daoCommand.printStackTrace();
+        } catch (DAOCommandException daoCommandException) {
+            daoCommandException.printStackTrace();
         }
 
         for(int i=0; i<lst.size() && result==false; i++) {

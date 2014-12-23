@@ -1,7 +1,7 @@
 package by.bsu.first.DAO;
 
 import by.bsu.first.entity.Entity;
-import by.bsu.first.exceptions.DAOCommand;
+import by.bsu.first.exceptions.DAOCommandException;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
@@ -10,9 +10,10 @@ import java.util.List;
 
 public abstract class AbstractDAO<T extends Entity> {
 
-   static Logger logger = Logger.getLogger(AbstractDAO.class);
+    static Logger logger = Logger.getLogger(AbstractDAO.class);
 
-    public abstract List<T> findAll() throws DAOCommand;
+   // public abstract List<T> findAll() throws DAOCommandException;
+
     public void close(Statement st) {
         try {
             if (st != null) {

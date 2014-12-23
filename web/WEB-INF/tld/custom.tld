@@ -17,4 +17,9 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <tag>
+        <name>info-time</name>
+        <tag-class>by.bsu.first.Tags.InfoTimeTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
 </taglib>

@@ -9,7 +9,7 @@
 
 <html>
 <head>
-    <title><fmt:message key="label.title.deletebooks" bundle="${ rb }"/></title>
+    <title><fmt:message key="order" bundle="${ rb }"/></title>
 
 </head>
 <body>
@@ -37,11 +37,11 @@
             </c:if>
             <c:if test="${ not empty role }">
                 <c:if test="${role ne 'administrator' }">
-                    <li class="current_page_item"><a href="controller?command=print" accesskey="1" title=""><fmt:message
+                    <li ><a href="controller?command=print" accesskey="1" title=""><fmt:message
                             key="catalogue" bundle="${ rb }"/></a></li>
                     <li><a href="controller?command=selectborrowinfobyusername" accesskey="2" title=""><fmt:message
                             key="issue.books" bundle="${ rb }"/></a></li>
-                    <li ><a href="controller?command=order" accesskey="3" title=""><fmt:message
+                    <li class="current_page_item"><a href="controller?command=order" accesskey="3" title=""><fmt:message
                             key="order" bundle="${ rb }"/></a></li>
                 </c:if>
             </c:if>
@@ -56,7 +56,7 @@
 </div>
 
 <form name="loginForm" method="POST" action="controller">
-    <input type="hidden" name="command" value="delete"/>
+    <input type="hidden" name="command" value="order"/>
     <table cellspacing="0">
 
         <tr>
@@ -84,7 +84,7 @@
         </c:forEach>
     </table>
     </br></br>
-    <input type="submit" value="<fmt:message key="button.delete" bundle="${ rb }"/>"/>
+    <input type="submit" value="<fmt:message key="button.order" bundle="${ rb }"/>"/>
 </form>
 
 <c:import url="/jsp/fragment/footer.jsp"></c:import>

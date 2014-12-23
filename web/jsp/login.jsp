@@ -19,23 +19,33 @@
 <div id="wrapper">
     <div id="menu" class="container">
         <ul>
-            <li class="current_page_item"><a href="/index.jsp" accesskey="1" title=""><fmt:message key="home" bundle="${ rb }"/></a></li>
+            <li class="current_page_item"><a href="/index.jsp" accesskey="1" title=""><fmt:message key="home"
+                                                                                                   bundle="${ rb }"/></a>
+            </li>
 
             <c:if test="${ role eq 'administrator'}">
-                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue" bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addBook.jsp" accesskey="2" title=""><fmt:message key="add.book" bundle="${ rb }"/></a></li>
-                <li><a href="controller?command=delete" accesskey="2" title=""><fmt:message key="delete.book" bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addReader.jsp" accesskey="4" title=""><fmt:message key="add.reader" bundle="${ rb }"/></a></li>
+                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
+                                                                                           bundle="${ rb }"/></a></li>
+                <li><a href="/jsp/addBook.jsp" accesskey="2" title=""><fmt:message key="add.book" bundle="${ rb }"/></a>
+                </li>
+                <li><a href="controller?command=delete" accesskey="2" title=""><fmt:message key="delete.book"
+                                                                                            bundle="${ rb }"/></a></li>
+                <li><a href="/jsp/addReader.jsp" accesskey="4" title=""><fmt:message key="add.reader"
+                                                                                     bundle="${ rb }"/></a></li>
             </c:if>
             <c:if test="${ not empty role }">
                 <c:if test="${role ne 'administrator' }">
-                    <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue" bundle="${ rb }"/></a></li>
-                    <li><a href="#" accesskey="2" title=""><fmt:message key="issue.books" bundle="${ rb }"/> </a></li>
+                    <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
+                                                                                               bundle="${ rb }"/></a>
+                    </li>
+                    <li><a href="controller?command=selectborrowinfobyusername" accesskey="2" title=""><fmt:message
+                            key="issue.books" bundle="${ rb }"/> </a></li>
                 </c:if>
             </c:if>
             <c:if test="${ empty role }">
-                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue" bundle="${ rb }"/></a></li>
-           </c:if>
+                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
+                                                                                           bundle="${ rb }"/></a></li>
+            </c:if>
 
         </ul>
     </div>
@@ -44,18 +54,20 @@
 
 <form name="loginForm" method="POST" action="controller">
     <div class="form">
-    <input type="hidden"  name="command" value="login" />
-    <input type="text" class="zocial-dribbble" name="login" value="" placeholder="<fmt:message key="login.placeholder" bundle="${ rb }"/>" />
+        <input type="hidden" name="command" value="login"/>
+        <input type="text" class="zocial-dribbble" name="login" value=""
+               placeholder="<fmt:message key="login.placeholder" bundle="${ rb }"/>"/>
 
-    <input type="password" name="password" value="" placeholder="<fmt:message key="password.placeholder" bundle="${ rb }"/>" />
+        <input type="password" name="password" value=""
+               placeholder="<fmt:message key="password.placeholder" bundle="${ rb }"/>"/>
 
-    ${errorLoginPassMessage}
-    <br/>
-    ${wrongAction}
-    <br/>
-    ${nullPage}
+        ${errorFillMessage}
+        <br/>
+        ${errorLoginPassMessage}
+        <br/>
+        ${nullPage}
 
-    <input type="submit" value="<fmt:message key="button.enter" bundle="${ rb }"/>"/>
+        <input type="submit" value="<fmt:message key="button.enter" bundle="${ rb }"/>"/>
     </div>
 </form>
 

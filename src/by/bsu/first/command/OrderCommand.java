@@ -1,28 +1,40 @@
 package by.bsu.first.command;
 
 import by.bsu.first.DAO.BookDAO;
+import by.bsu.first.DAO.OrderDAO;
+import by.bsu.first.DAO.UserDAO;
 import by.bsu.first.entity.Book;
 import by.bsu.first.exceptions.CommandException;
 import by.bsu.first.exceptions.DAOCommandException;
 import by.bsu.first.manager.ConfigManager;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
-
-public class DeleteBookCommand implements Command {
+public class OrderCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
 
         String select[] = request.getParameterValues("id");
+        HttpSession session = request.getSession(true);
+        String currentRole = (String) session.getAttribute("role");
+        UserDAO daoUser = new UserDAO();
+        int idCard;
+        try {
+
+            idCard = daoUser.findIdByUsername(currentRole);
+        } catch (DAOCommandException e) {
+            throw new CommandException(e.getCause());
+        }
 
         if (select != null && select.length != 0) {
-           for (int i = 0; i < select.length; i++) {
+            for (int i = 0; i < select.length; i++) {
 
-                BookDAO dao = new BookDAO();
+                OrderDAO dao = new  OrderDAO();
                 try {
-                    dao.deleteBook(select[i]);
+                    dao.addOrder(select[i],idCard);
                 } catch (DAOCommandException e) {
                     throw new CommandException(e.getCause());
                 }
@@ -37,7 +49,7 @@ public class DeleteBookCommand implements Command {
             throw new CommandException(e.getCause());
         }
         request.setAttribute("lst", lst);
-        String page = ConfigManager.getProperty("path.page.deletebook");
+        String page = ConfigManager.getProperty("path.page.orders");
         return page;
     }
 }

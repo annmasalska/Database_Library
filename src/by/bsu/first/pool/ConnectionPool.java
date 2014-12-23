@@ -45,6 +45,7 @@ public class ConnectionPool {
 
     public Connection getConnection() throws ConnectionPoolException {
         Connection connection = null;
+
         try {
             connection = connectionQueue.take();
         } catch (InterruptedException e) {
@@ -71,9 +72,10 @@ public class ConnectionPool {
 
     public void returnConnection(Connection connection) {
         connectionQueue.offer(connection);
+
     }
 
-    public void closePool() {
+    public void closePool() throws ConnectionPoolException {
         Connection connection = null;
         for (int i = 0; i < POOL_SIZE; i++) {
             try {
@@ -81,7 +83,7 @@ public class ConnectionPool {
                 if (connection != null)
                     connection.close();
             } catch (InterruptedException e) {
-                logger.error(e);
+                throw new ConnectionPoolException("problem with  connection",e);
             } catch (SQLException e) {
                 logger.error(e);
             }

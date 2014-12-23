@@ -33,23 +33,22 @@
                                                                                             bundle="${ rb }"/></a></li>
                 <li><a href="/jsp/addReader.jsp" accesskey="4" title=""><fmt:message key="add.reader"
                                                                                      bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addBorrowInfo.jsp" accesskey="5" title=""><fmt:message key="addborrow"
-                                                                                         bundle="${ rb }"/></a></li>
             </c:if>
             <c:if test="${ not empty role }">
                 <c:if test="${role ne 'administrator' }">
-                    <li class="current_page_item"><a href="controller?command=print" accesskey="1" title=""><fmt:message
-                            key="catalogue" bundle="${ rb }"/></a></li>
-                    <li><a href="controller?command=selectborrowinfobyusername" accesskey="2" title=""><fmt:message
-                            key="issue.books" bundle="${ rb }"/> </a></li>
-                    <li><a href="controller?command=order" accesskey="3" title=""><fmt:message
+                    <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
+                                                                                               bundle="${ rb }"/></a>
+                    </li>
+                    <li class="current_page_item"><a href="controller?command=selectborrowinfobyusername" accesskey="2"
+                                                     title=""><fmt:message key="issue.books" bundle="${ rb }"/> </a>
+                    </li>
+                    <li ><a href="controller?command=delete" accesskey="3" title=""><fmt:message
                             key="order" bundle="${ rb }"/></a></li>
                 </c:if>
             </c:if>
             <c:if test="${ empty role }">
-                <li class="current_page_item"><a href="controller?command=print" accesskey="1" title=""><fmt:message
-                        key="catalogue"
-                        bundle="${ rb }"/></a></li>
+                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
+                                                                                           bundle="${ rb }"/></a></li>
 
 
             </c:if>
@@ -69,42 +68,46 @@
             <option value="5"><fmt:message key="genre.philosophy" bundle="${ rb }"/></option>
             <option value="6"><fmt:message key="genre.antique" bundle="${ rb }"/></option>
             <option value="7"><fmt:message key="genre.drama" bundle="${ rb }"/></option>
+
         </select>
         <input type="submit" value="<fmt:message key="button.printbooksbygenre" bundle="${ rb }"/>"/>
 
     </form>
 </div>
 
-${ errorSearchMessage}
-<c:if test="${not empty lst  }">
+
 <table cellspacing="0">
 
     <tr>
 
-        <th><fmt:message key="book.idnumber" bundle="${ rb }"/></th>
+        <th><fmt:message key="borrow.info" bundle="${ rb }"/></th>
         <th><fmt:message key="book.name" bundle="${ rb }"/></th>
         <th><fmt:message key="book.author" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.genre" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.amount" bundle="${ rb }"/></th>
         <th><fmt:message key="book.information" bundle="${ rb }"/></th>
+        <th><fmt:message key="borrow.date" bundle="${ rb }"/></th>
+        <th><fmt:message key="borrow.status" bundle="${ rb }"/></th>
 
     </tr>
-    <tr>
 
-
-    </tr>
-    </c:if>
     <c:forEach var="elem" items="${lst}" varStatus="status">
         <tr>
 
-            <td><c:out value="${ elem.id  }"/></td>
+            <td><c:out value="${ elem.idissue  }"/></td>
             <td><c:out value="${ elem.name }"/></td>
             <td><c:out value="${ elem.author }"/></td>
-            <td><c:out value="${ elem.genreID }"/></td>
-            <td><c:out value="${ elem.amount }"/></td>
             <td><c:out value="${ elem.information }"/></td>
-
+            <td><c:out value="${ elem.date }"/></td>
+            <c:if test="${ elem.status eq '1' }">
+                <td><fmt:message key="borrow.status_1" bundle="${ rb }"/></td>
+            </c:if>
+            <c:if test="${ elem.status eq '2' }">
+                <td><fmt:message key="borrow.status_2" bundle="${ rb }"/></td>
+            </c:if>
+            <c:if test="${ elem.status eq '3' }">
+                <td><fmt:message key="borrow.status_3" bundle="${ rb }"/></td>
+            </c:if>
         </tr>
+
     </c:forEach>
 
 </table>

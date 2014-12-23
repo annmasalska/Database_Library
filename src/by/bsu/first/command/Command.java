@@ -4,6 +4,6 @@ import by.bsu.first.exceptions.CommandException;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface Command  {
+public interface Command {
     String execute(HttpServletRequest request) throws CommandException;
 }

@@ -2,13 +2,14 @@ package by.bsu.first.command;
 
 import by.bsu.first.DAO.ReaderDAO;
 import by.bsu.first.exceptions.CommandException;
-import by.bsu.first.exceptions.DAOCommand;
+import by.bsu.first.exceptions.DAOCommandException;
 import by.bsu.first.exceptions.LogicException;
 import by.bsu.first.logic.AddReaderLogic;
 import by.bsu.first.manager.ConfigManager;
 import by.bsu.first.manager.MessageManager;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 public class AddReaderCommand implements Command {
@@ -30,32 +31,35 @@ public class AddReaderCommand implements Command {
         String secondname = request.getParameter(PARAM_SECONDNAME);
         String address = request.getParameter(PARAM_ADDRESS);
         String phone = request.getParameter(PARAM_PHONE);
-
+        HttpSession session = request.getSession(true);
+        String locale = (String) session.getAttribute("locale");
+        if (locale == null)
+            locale = "ru";
 
         if (idcard == null || lastname == null || lastname.isEmpty() || name == null || name.isEmpty() || secondname == null || secondname.isEmpty() || address == null || address.isEmpty() || phone == null || phone.isEmpty()) {
-            request.setAttribute("errorMessage", "message.adderror");
+            request.setAttribute("errorFillMessage", MessageManager.getMessage("message.fillerror", locale));
             page = ConfigManager.getProperty("path.page.addreader");
-        }
+        } else {
+            int IDcard = Integer.parseInt(idcard);
+            try {
+                if (!AddReaderLogic.addReader(idcard)) {
+                    ReaderDAO dao = new ReaderDAO();
+                    try {
+                        dao.addReader(IDcard, lastname, name, secondname, address, phone);
+                    } catch (DAOCommandException e) {
+                        throw new CommandException(e.getCause());
+                    }
+                    request.setAttribute("successMessage", MessageManager.getMessage("message.borrowerror_success", locale));
+                    page = ConfigManager.getProperty("path.page.addreader");
 
-        int IDcard = Integer.parseInt(idcard);
-        try {
-            if (!AddReaderLogic.addReader(idcard)) {
-
-
-                ReaderDAO dao = new ReaderDAO();
-                try {
-                    dao.addReader(IDcard, lastname, name, secondname, address, phone);
-                } catch (DAOCommand e) {
-                    throw new CommandException(e.getCause());
+                } else {
+                    request.setAttribute("errorMessage", MessageManager.getMessage("message.readerexist", locale));
+                    page = ConfigManager.getProperty("path.page.addreader");
                 }
-                page = ConfigManager.getProperty("path.page.index");
-
-            } else {
-                request.setAttribute("errorMessage", MessageManager.EN.getMessage("message.loginexist"));
-                page = ConfigManager.getProperty("path.page.addreader");
+            } catch (LogicException e) {
+                throw new CommandException(e.getCause());
             }
-        } catch (LogicException e) {
-            throw new CommandException(e.getCause());
+
         }
 
 
