@@ -9,6 +9,6 @@ public class EmptyCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
 
-        return ConfigManager.getProperty("path.page.index");
+        return ConfigManager.getProperty("path.page.home");
     }
 }

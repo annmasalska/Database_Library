@@ -11,7 +11,19 @@
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
 }
+.message{
+    display: block;
+    width: 309px;
+    height: 35px;
+    margin: 15px auto;
+    background: #f6f6f6;
+    border: 0px;
+    padding: 5px;
+    font-size: 14px;
 
+    transition: all 0.3s ease;
+
+}
 #mymenu
 {
     display: block;

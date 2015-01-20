@@ -22,28 +22,29 @@
 <div id="wrapper">
     <div id="menu" class="container">
         <ul>
-            <li><a href="/index.jsp" accesskey="1" title=""><fmt:message key="home" bundle="${ rb }"/></a></li>
+            <li><a href="/home.jsp" accesskey="1" title=""><fmt:message key="home" bundle="${ rb }"/></a></li>
 
             <c:if test="${ role eq 'administrator'}">
                 <li class="current_page_item"><a href="controller?command=print" accesskey="1" title=""><fmt:message
                         key="catalogue" bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addBook.jsp" accesskey="2" title=""><fmt:message key="add.book" bundle="${ rb }"/></a>
+                <li><a href="/jsp/admin/addBook.jsp" accesskey="2" title=""><fmt:message key="add.book" bundle="${ rb }"/></a>
                 </li>
                 <li><a href="controller?command=delete" accesskey="2" title=""><fmt:message key="delete.book"
                                                                                             bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addReader.jsp" accesskey="4" title=""><fmt:message key="add.reader"
-                                                                                     bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addBorrowInfo.jsp" accesskey="5" title=""><fmt:message key="addborrow"
-                                                                                         bundle="${ rb }"/></a></li>
+
+                <li><a href="controller?command=confirmorder" accesskey="5" title=""><fmt:message key="addborrow"
+                                                                                                  bundle="${ rb }"/></a>
+                </li>
+                <li><a href="controller?command=returnbook" accesskey="6" title="">Вернуть книгу</a></li>
             </c:if>
             <c:if test="${ not empty role }">
                 <c:if test="${role ne 'administrator' }">
                     <li class="current_page_item"><a href="controller?command=print" accesskey="1" title=""><fmt:message
                             key="catalogue" bundle="${ rb }"/></a></li>
-                    <li><a href="controller?command=selectborrowinfobyusername" accesskey="2" title=""><fmt:message
-                            key="issue.books" bundle="${ rb }"/> </a></li>
-                    <li><a href="controller?command=order" accesskey="3" title=""><fmt:message
-                            key="order" bundle="${ rb }"/></a></li>
+                    <li><a href="controller?command=selectissuedbooks" accesskey="2" title=""><fmt:message
+                            key="issuedbooks" bundle="${ rb }"/> </a></li>
+                    <li><a href="controller?command=selectordersbyusername" accesskey="3" title=""><fmt:message
+                            key="myorders" bundle="${ rb }"/></a></li>
                 </c:if>
             </c:if>
             <c:if test="${ empty role }">
@@ -56,6 +57,21 @@
         </ul>
     </div>
 </div>
+<style>
+    <%@include file='/css/search.css' %>
+
+
+</style>
+<form name="searchForm" method="POST" action="controller" class="search">
+
+    <input type="hidden" name="command" value="searchByAuthor"/>
+    <input type="search" name="author" placeholder="<fmt:message key="search.author.placeholder" bundle="${ rb }"/>"
+           class="input"/>
+
+
+    <input type="submit" name="" value="<fmt:message key="search.button" bundle="${ rb }"/>" class="submit"/>
+
+</form>
 <div id="buttons_catalog">
     <form name="loginForm" method="POST" action="controller">
         <input type="hidden" name="command" value="selectbygenre"/>
@@ -74,41 +90,49 @@
 
     </form>
 </div>
-
+${errorFillMessage}
 ${ errorSearchMessage}
-<c:if test="${not empty lst  }">
-<table cellspacing="0">
+${successMessage}
+<form name="loginForm" method="POST" action="controller">
+    <input type="hidden" name="command" value="order"/>
+    <c:if test="${not empty lst  }">
+    <table cellspacing="0">
 
-    <tr>
-
-        <th><fmt:message key="book.idnumber" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.name" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.author" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.genre" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.amount" bundle="${ rb }"/></th>
-        <th><fmt:message key="book.information" bundle="${ rb }"/></th>
-
-    </tr>
-    <tr>
-
-
-    </tr>
-    </c:if>
-    <c:forEach var="elem" items="${lst}" varStatus="status">
         <tr>
-
-            <td><c:out value="${ elem.id  }"/></td>
-            <td><c:out value="${ elem.name }"/></td>
-            <td><c:out value="${ elem.author }"/></td>
-            <td><c:out value="${ elem.genreID }"/></td>
-            <td><c:out value="${ elem.amount }"/></td>
-            <td><c:out value="${ elem.information }"/></td>
+            <c:if test="${ not empty role &&  role ne 'administrator' }">
+                <th></th>
+            </c:if>
+            <th><fmt:message key="book.idnumber" bundle="${ rb }"/></th>
+            <th><fmt:message key="book.name" bundle="${ rb }"/></th>
+            <th><fmt:message key="book.author" bundle="${ rb }"/></th>
+            <th><fmt:message key="book.genre" bundle="${ rb }"/></th>
+            <th><fmt:message key="book.amount" bundle="${ rb }"/></th>
+            <th><fmt:message key="book.information" bundle="${ rb }"/></th>
 
         </tr>
-    </c:forEach>
+        <tr>
+        </tr>
+        </c:if>
+        <c:forEach var="elem" items="${lst}" varStatus="status">
+            <tr>
+                <c:if test="${ not empty role &&  role ne 'administrator' }">
+                    <td><input type="checkbox" name="id" value="${ elem.id  }"><span></span></td>
+                </c:if>
+                <td><c:out value="${ elem.id  }"/></td>
+                <td><c:out value="${ elem.name }"/></td>
+                <td><c:out value="${ elem.author }"/></td>
+                <td><c:out value="${ elem.genreID }"/></td>
+                <td><c:out value="${ elem.amount }"/></td>
+                <td><c:out value="${ elem.information }"/></td>
 
-</table>
-
+            </tr>
+        </c:forEach>
+    </table>
+    </br></br>
+    <c:if test="${ not empty role &&  role ne 'administrator' }">
+        <input type="submit" value="<fmt:message key="button.order" bundle="${ rb }"/>"/>
+    </c:if>
+</form>
 
 <c:import url="/jsp/fragment/footer.jsp"></c:import>
 </body>

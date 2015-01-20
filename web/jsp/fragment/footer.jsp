@@ -7,6 +7,6 @@
 <div id="footer">
 
     <p>&copy;<fmt:message key="footer.copyright" bundle="${ rb }"/> | <a href="controller?command=locale&id=ru">RU</a> |
-        <a href="controller?command=locale&id=en">EN</a> <ctg:info-time/></p>
+        <a href="controller?command=locale&id=en">EN</a></p>
 
 </div>

@@ -4,18 +4,15 @@ package by.bsu.first.entity;
 public class User extends Entity {
 
     private String username;
+    private String email;
+    private String phone;
     private String password;
 
     public User() {
 
     }
 
-    public User(int id, String username, String password) {
 
-        super(id);
-        this.username = username;
-        this.password = password;
-    }
 
     public String getUsername() {
         return username;
@@ -23,6 +20,20 @@ public class User extends Entity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPassword() {

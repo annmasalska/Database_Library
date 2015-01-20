@@ -11,12 +11,12 @@ public class LocaleCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = null;
 
+        String page = null;
         String localeValue = request.getParameter(PARAM_LOCALE);
         HttpSession session = request.getSession(true);
         session.setAttribute("locale", localeValue);
-        page = ConfigManager.getProperty("path.page.index");
+        page = ConfigManager.getProperty("path.page.home");
         return page;
     }
 }

@@ -1,7 +1,7 @@
 package by.bsu.first.command;
 
 import by.bsu.first.exceptions.CommandException;
-import by.bsu.first.exceptions.DAOCommandException;
+import by.bsu.first.exceptions.DAOException;
 import by.bsu.first.hashing.HashCustom;
 import by.bsu.first.logic.LoginLogic;
 import by.bsu.first.manager.ConfigManager;
@@ -18,17 +18,17 @@ public class LoginCommand implements Command {
     static Logger logger = Logger.getLogger(LoginCommand.class);
     private static final String PARAM_LOGIN = "login";
     private static final String PARAM_PASSWORD = "password";
-
+    private static final String PARAM_LOCALE = "locale";
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
+
         String page = null;
         String loginValue = request.getParameter(PARAM_LOGIN);
         String passValue = request.getParameter(PARAM_PASSWORD);
 
         HttpSession session = request.getSession(true);
-        String locale = (String) session.getAttribute("locale");
-        if (locale == null)
-            locale = "ru";
+        String locale = (String) session.getAttribute(PARAM_LOCALE);
+
         if (loginValue == null || loginValue.isEmpty() || passValue == null || passValue.isEmpty()) {
 
             request.setAttribute("errorFillMessage", MessageManager.getMessage("message.fillerror", locale));
@@ -39,7 +39,7 @@ public class LoginCommand implements Command {
                 if (LoginLogic.checkUser(loginValue, passValue)) {
                     request.setAttribute("user", loginValue);
                     session.setAttribute("role", loginValue);
-                    page = ConfigManager.getProperty("path.page.index");
+                    page = ConfigManager.getProperty("path.page.home");
                 } else {
                     request.setAttribute("errorLoginPassMessage", MessageManager.getMessage("message.loginerror", locale));
                     page = ConfigManager.getProperty("path.page.login");
@@ -47,7 +47,7 @@ public class LoginCommand implements Command {
             } catch (SQLException e) {
                 logger.error(e);
 
-            } catch (DAOCommandException e) {
+            } catch (DAOException e) {
                 throw new CommandException(e.getCause());
             }
         }

@@ -8,11 +8,12 @@ public enum CommandType {
     ADDBOOK(new AddBookCommand()),
     DELETE(new DeleteBookCommand()),
     LOCALE(new LocaleCommand()),
-    ADDREADER(new AddReaderCommand()),
     SELECTBYGENRE(new SelectBooksByGenreCommand()),
-    SELECTBORROWINFOBYUSERNAME(new SelectBorrowInfoByUsername()),
-    ADDBORROWINFO(new AddBorrowInfoCommand()),
+    SELECTORDERSBYUSERNAME(new SelectOrdersByUsername()),
+    SELECTISSUEDBOOKS(new SelectIssuedBooks()),
+    CONFIRMORDER(new ConfirmOrderCommand()),
     SEARCHBYAUTHOR(new SearchCommand()),
+    RETURNBOOK(new ReturnBookCommand()),
     ORDER(new OrderCommand());
 
     private Command command;

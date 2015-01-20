@@ -2,7 +2,7 @@ package by.bsu.first.DAO;
 
 import by.bsu.first.entity.Book;
 import by.bsu.first.exceptions.ConnectionPoolException;
-import by.bsu.first.exceptions.DAOCommandException;
+import by.bsu.first.exceptions.DAOException;
 import by.bsu.first.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -16,13 +16,12 @@ public class BookDAO extends AbstractDAO<Book> {
 
     static Logger logger = Logger.getLogger(BookDAO.class);
     public static final String SQL_SELECT_ALL_BOOKS = "SELECT books.id,books.name,books.author,books.amount,books.information, genres.genre FROM books LEFT JOIN genres ON books.genreID=genres.genreID ";
-    public static final String SQL_INSERT_NEW_BOOK = "INSERT INTO books(id, name, author, genreID, amount, information) VALUES(?, ?, ? , ? , ? , ?)";
+    public static final String SQL_INSERT_NEW_BOOK = "INSERT INTO books( name, author, genreID, amount, information) VALUES(?, ? , ? , ? , ?)";
     public static final String SQL_DELETE_BOOK = "DELETE FROM books WHERE id=?";
     public static final String SQL_SELECT_BOOKS_BY_GENRE = "SELECT books.id,books.name,books.author,books.amount,books.information, genres.genre FROM books LEFT JOIN genres ON books.genreID=genres.genreID  WHERE books.genreID = ? ";
     public static final String SQL_SELECT_BOOK = "SELECT amount FROM books WHERE id=?";
-   // public static final String SQL_INSERT_ORDER = "INSERT INTO books(id, name, author, genreID, amount, information) VALUES
-   // @Override
-    public List<Book> findAll() throws DAOCommandException {
+
+    public List<Book> findAll() throws DAOException {
         List<Book> books = new ArrayList<Book>();
         Connection cn = null;
         Statement st = null;
@@ -38,19 +37,19 @@ public class BookDAO extends AbstractDAO<Book> {
                 book.setId(resultSet.getInt("books.id"));
                 book.setName(resultSet.getString("books.name"));
                 book.setAuthor(resultSet.getString("books.author"));
-               // int amount=resultSet.getInt("books.amount");
+                // int amount=resultSet.getInt("books.amount");
 
                 book.setAmount(resultSet.getInt("books.amount"));
                 book.setInformation(resultSet.getString("books.information"));
                 book.setGenreID(resultSet.getString("genres.genre"));
-                if(resultSet.getInt("books.amount")>0)
-                books.add(book);
+                if (resultSet.getInt("books.amount") > 0)
+                    books.add(book);
             }
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
         } catch (ConnectionPoolException e) {
-            throw new DAOCommandException(e.getCause());
-            //logger.error("SQL exception (request or table failed): " + e);
+            throw new DAOException(e.getCause());
+
         } finally {
             close(st);
             pool.returnConnection(cn);
@@ -59,7 +58,7 @@ public class BookDAO extends AbstractDAO<Book> {
         return books;
     }
 
-    public List<Book> selectByGenre(String genreID) throws DAOCommandException {
+    public List<Book> selectByGenre(String genreID) throws DAOException {
         List<Book> books = new ArrayList<Book>();
         Connection cn = null;
         ConnectionPool pool = ConnectionPool.getPool();
@@ -86,7 +85,7 @@ public class BookDAO extends AbstractDAO<Book> {
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
         } catch (ConnectionPoolException e) {
-            throw new DAOCommandException(e.getCause());
+            throw new DAOException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
         } finally {
             close(st);
@@ -96,7 +95,7 @@ public class BookDAO extends AbstractDAO<Book> {
         return books;
     }
 
-    public void addBook(String id, String name, String author, String genreID, String amount, String information) throws DAOCommandException {
+    public void addBook(String name, String author, String genreID, String amount, String information) throws DAOException {
 
         ConnectionPool pool = ConnectionPool.getPool();
         Connection cn = null;
@@ -104,19 +103,23 @@ public class BookDAO extends AbstractDAO<Book> {
         try {
             cn = pool.getConnection();
             ps = cn.prepareStatement(SQL_INSERT_NEW_BOOK);
-            ps.setInt(1, Integer.parseInt(id));
-            ps.setString(2, name);
-            ps.setString(3, author);
-            ps.setInt(4, Integer.parseInt(genreID));
-            ps.setString(5, amount);
-            ps.setString(6, information);
+
+            ps.setString(1, name);
+            ps.setString(2, author);
+            ps.setInt(3, Integer.parseInt(genreID));
+            ps.setString(4, amount);
+            ps.setString(5, information);
             ps.executeUpdate();
+
+            ResultSet res = ps.getGeneratedKeys();
+            while (res.next())
+                System.out.println("Generated key: " + res.getInt(1));
             cn.commit();
 
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
         } catch (ConnectionPoolException e) {
-            throw new DAOCommandException(e.getCause());
+            throw new DAOException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
         } finally {
             close(ps);
@@ -126,7 +129,7 @@ public class BookDAO extends AbstractDAO<Book> {
 
     }
 
-    public void deleteBook(String idDelete) throws DAOCommandException {
+    public void deleteBook(String idDelete) throws DAOException {
         int id1 = Integer.parseInt(idDelete);
 
 
@@ -143,7 +146,7 @@ public class BookDAO extends AbstractDAO<Book> {
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
         } catch (ConnectionPoolException e) {
-            throw new DAOCommandException(e.getCause());
+            throw new DAOException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
         } finally {
             close(ps);
@@ -153,14 +156,14 @@ public class BookDAO extends AbstractDAO<Book> {
 
     }
 
-    public List<Book> searchByAuthor(String author) throws DAOCommandException {
+    public List<Book> searchByAuthor(String string) throws DAOException {
 
         List<Book> books = new ArrayList<Book>();
         Connection cn = null;
         Statement st = null;
         ConnectionPool pool = ConnectionPool.getPool();
 
-       // PreparedStatement st = null;
+        // PreparedStatement st = null;
         try {
             cn = pool.getConnection();
             //st = cn.prepareStatement(SQL_FIND_BY_AUTHOR);
@@ -176,20 +179,20 @@ public class BookDAO extends AbstractDAO<Book> {
                 book.setAmount(resultSet.getInt("books.amount"));
                 book.setInformation(resultSet.getString("books.information"));
                 book.setAuthor(resultSet.getString("books.author"));
-                Pattern pt = Pattern.compile(author);
-                Matcher mt = pt.matcher(resultSet.getString("books.author"));
-                if (mt.find()) {
+                Pattern pt = Pattern.compile(string);
+                Matcher author = pt.matcher(resultSet.getString("books.author"));
+                Matcher name = pt.matcher(resultSet.getString("books.name"));
+                if (author.find() || name.find()) {
                     books.add(book);
 
                 }
-
 
 
             }
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
         } catch (ConnectionPoolException e) {
-            throw new DAOCommandException(e.getCause());
+            throw new DAOException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
         } finally {
             close(st);
@@ -198,28 +201,29 @@ public class BookDAO extends AbstractDAO<Book> {
         }
         return books;
     }
-    public Boolean checkExistence(String idbook) throws DAOCommandException {
+
+    public Boolean checkExistence(String idbook) throws DAOException {
 
         Connection cn = null;
         PreparedStatement st = null;
-        Boolean check=false;
+        Boolean check = false;
         ConnectionPool pool = ConnectionPool.getPool();
-       try {
+        try {
             cn = pool.getConnection();
             st = cn.prepareStatement(SQL_SELECT_BOOK);
-             st.setInt(1, Integer.parseInt(idbook));
+            st.setInt(1, Integer.parseInt(idbook));
 
             ResultSet resultSet = st.executeQuery();
             while (resultSet.next()) {
 
-                int amount=resultSet.getInt("amount");
-                if(amount >0) check=true;
-                else check=false;
+                int amount = resultSet.getInt("amount");
+                if (amount > 0) check = true;
+                else check = false;
             }
         } catch (SQLException e) {
             logger.error("SQL exception (request or table failed): " + e);
         } catch (ConnectionPoolException e) {
-            throw new DAOCommandException(e.getCause());
+            throw new DAOException(e.getCause());
             //logger.error("SQL exception (request or table failed): " + e);
         } finally {
             close(st);

@@ -3,7 +3,7 @@ package by.bsu.first.command;
 import by.bsu.first.DAO.BookDAO;
 import by.bsu.first.entity.Book;
 import by.bsu.first.exceptions.CommandException;
-import by.bsu.first.exceptions.DAOCommandException;
+import by.bsu.first.exceptions.DAOException;
 import by.bsu.first.manager.ConfigManager;
 import by.bsu.first.manager.MessageManager;
 
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public class CatalogCommand implements Command {
-
+    private static final String PARAM_LOCALE = "locale";
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
 
@@ -21,13 +21,12 @@ public class CatalogCommand implements Command {
         List<Book> lst = null;
         try {
             lst = dao.findAll();
-        } catch (DAOCommandException e) {
+        } catch (DAOException e) {
             throw new CommandException(e.getCause());
         }
         HttpSession session = request.getSession(true);
-        String locale = (String) session.getAttribute("locale");
-        if (locale == null)
-            locale = "ru";
+        String locale = (String) session.getAttribute(PARAM_LOCALE);
+
         if (lst.isEmpty()) {
             request.setAttribute("errorSearchMessage", MessageManager.getMessage("message.searcherror", locale));
             page = ConfigManager.getProperty("path.page.catalogue");
@@ -35,8 +34,6 @@ public class CatalogCommand implements Command {
             request.setAttribute("lst", lst);
             page = ConfigManager.getProperty("path.page.catalogue");
         }
-
-
         return page;
     }
 }

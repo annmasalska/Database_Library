@@ -2,17 +2,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="ctg" uri="customtags" %>
-
-
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="resources.pagecontent" var="rb"/>
 
 <html>
 <head>
-    <title><fmt:message key="order" bundle="${ rb }"/></title>
-
+    <title><fmt:message key="myorders" bundle="${ rb }"/></title>
 </head>
 <body>
+
 <style>
     <%@include file='/css/default.css' %>
     <%@include file='/css/table.css' %>
@@ -23,70 +21,48 @@
 <div id="wrapper">
     <div id="menu" class="container">
         <ul>
-            <li><a href="/index.jsp" accesskey="1" title=""><fmt:message key="home" bundle="${ rb }"/></a></li>
+            <li><a href="/home.jsp" accesskey="1" title=""><fmt:message key="home" bundle="${ rb }"/></a></li>
+            <c:if test="${ not empty role && role ne 'administrator'}">
 
-            <c:if test="${ role eq 'administrator'}">
-                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
-                                                                                           bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addBook.jsp" accesskey="2" title=""><fmt:message key="add.book" bundle="${ rb }"/></a>
-                </li>
-                <li class="current_page_item"><a href="controller?command=delete" accesskey="2" title=""><fmt:message
-                        key="delete.book" bundle="${ rb }"/></a></li>
-                <li><a href="/jsp/addReader.jsp" accesskey="4" title=""><fmt:message key="add.reader"
-                                                                                     bundle="${ rb }"/></a></li>
-            </c:if>
-            <c:if test="${ not empty role }">
-                <c:if test="${role ne 'administrator' }">
-                    <li ><a href="controller?command=print" accesskey="1" title=""><fmt:message
-                            key="catalogue" bundle="${ rb }"/></a></li>
-                    <li><a href="controller?command=selectborrowinfobyusername" accesskey="2" title=""><fmt:message
-                            key="issue.books" bundle="${ rb }"/></a></li>
-                    <li class="current_page_item"><a href="controller?command=order" accesskey="3" title=""><fmt:message
-                            key="order" bundle="${ rb }"/></a></li>
-                </c:if>
+                <li><a href="controller?command=print" accesskey="1" title=""><fmt:message
+                        key="catalogue" bundle="${ rb }"/></a></li>
+                <li><a href="controller?command=selectissuedbooks" accesskey="2" title=""><fmt:message
+                        key="issuedbooks" bundle="${ rb }"/></a></li>
+                <li class="current_page_item"><a href="controller?command=selectordersbyusername" accesskey="3"
+                                                 title=""><fmt:message key="myorders" bundle="${ rb }"/></a></li>
+
             </c:if>
             <c:if test="${ empty role }">
                 <li><a href="controller?command=print" accesskey="1" title=""><fmt:message key="catalogue"
                                                                                            bundle="${ rb }"/></a></li>
-
-
             </c:if>
         </ul>
     </div>
 </div>
 
-<form name="loginForm" method="POST" action="controller">
-    <input type="hidden" name="command" value="order"/>
+<c:if test="${not empty lst  }">
     <table cellspacing="0">
 
         <tr>
-            <th></th>
-            <th><fmt:message key="book.idnumber" bundle="${ rb }"/></th>
+            <th><fmt:message key="borrow.info" bundle="${ rb }"/></th>
             <th><fmt:message key="book.name" bundle="${ rb }"/></th>
             <th><fmt:message key="book.author" bundle="${ rb }"/></th>
-            <th><fmt:message key="book.genre" bundle="${ rb }"/></th>
-            <th><fmt:message key="book.amount" bundle="${ rb }"/></th>
             <th><fmt:message key="book.information" bundle="${ rb }"/></th>
-
-
+            <th><fmt:message key="order.date" bundle="${ rb }"/></th>
         </tr>
+
         <c:forEach var="elem" items="${lst}" varStatus="status">
             <tr>
-                <td><input type="checkbox" name="id" value="${ elem.id  }"><span></span></td>
-                <td><c:out value="${ elem.id  }"/></td>
+                <td><c:out value="${ elem.idorder  }"/></td>
                 <td><c:out value="${ elem.name }"/></td>
                 <td><c:out value="${ elem.author }"/></td>
-                <td><c:out value="${ elem.genreID }"/></td>
-                <td><c:out value="${ elem.amount }"/></td>
                 <td><c:out value="${ elem.information }"/></td>
-
+                <td><c:out value="${ elem.date }"/></td>
             </tr>
         </c:forEach>
-    </table>
-    </br></br>
-    <input type="submit" value="<fmt:message key="button.order" bundle="${ rb }"/>"/>
-</form>
 
+    </table>
+</c:if>
 <c:import url="/jsp/fragment/footer.jsp"></c:import>
 </body>
 </html>

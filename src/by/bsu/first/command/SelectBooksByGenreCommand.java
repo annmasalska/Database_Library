@@ -3,7 +3,7 @@ package by.bsu.first.command;
 import by.bsu.first.DAO.BookDAO;
 import by.bsu.first.entity.Book;
 import by.bsu.first.exceptions.CommandException;
-import by.bsu.first.exceptions.DAOCommandException;
+import by.bsu.first.exceptions.DAOException;
 import by.bsu.first.manager.ConfigManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ public class SelectBooksByGenreCommand implements Command {
             List<Book> lst = null;
             try {
                 lst = dao.findAll();
-            } catch (DAOCommandException e) {
+            } catch (DAOException e) {
                 throw new CommandException(e.getCause());
             }
             request.setAttribute("lst", lst);
@@ -33,7 +33,7 @@ public class SelectBooksByGenreCommand implements Command {
         List<Book> lst = null;
         try {
             lst = dao.selectByGenre(genreID);
-        } catch (DAOCommandException e) {
+        } catch (DAOException e) {
             throw new CommandException(e.getCause());
         }
         request.setAttribute("lst", lst);

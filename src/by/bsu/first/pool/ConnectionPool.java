@@ -2,10 +2,10 @@ package by.bsu.first.pool;
 
 import by.bsu.first.exceptions.ConnectionPoolException;
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,10 +18,16 @@ public class ConnectionPool {
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
     private static ConnectionPool pool;
-    private final int POOL_SIZE = 10;
-    private final String DATABASE_PATH = "jdbc:mysql://localhost:3306/library";
+
+    private final static ResourceBundle resourceBundle = ResourceBundle.getBundle("resources.database");
 
     private ConnectionPool() {
+
+        String path = resourceBundle.getString("database.path");
+        String login = resourceBundle.getString("database.user");
+        String pass = resourceBundle.getString("database.password");
+        int poolSize = Integer.parseInt(resourceBundle.getString("database.poolsize"));
+
         try {
             DriverManager.registerDriver(new com.mysql.jdbc.Driver());
         } catch (SQLException e) {
@@ -29,11 +35,11 @@ public class ConnectionPool {
 
 
         }
-        connectionQueue = new ArrayBlockingQueue<Connection>(POOL_SIZE);
+        connectionQueue = new ArrayBlockingQueue<Connection>(poolSize);
         try {
 
-            for (int i = 0; i < POOL_SIZE; i++) {
-                Connection connection = DriverManager.getConnection(DATABASE_PATH, "root", "2286890");
+            for (int i = 0; i < poolSize; i++) {
+                Connection connection = DriverManager.getConnection(path, login, pass);
                 connectionQueue.offer(connection);
             }
         } catch (SQLException e) {
@@ -49,7 +55,7 @@ public class ConnectionPool {
         try {
             connection = connectionQueue.take();
         } catch (InterruptedException e) {
-            throw new ConnectionPoolException("problem with  connection",e);
+            throw new ConnectionPoolException("problem with  connection", e);
         }
         return connection;
     }
@@ -63,10 +69,10 @@ public class ConnectionPool {
                     pool = new ConnectionPool();
                     isCreated.set(true);
                 }
-        }finally{
-            lock.unlock(); // снятие блокировки
+            } finally {
+                lock.unlock(); // снятие блокировки
+            }
         }
-    }
         return pool;
     }
 
@@ -77,13 +83,13 @@ public class ConnectionPool {
 
     public void closePool() throws ConnectionPoolException {
         Connection connection = null;
-        for (int i = 0; i < POOL_SIZE; i++) {
+        for (int i = 0; i < connectionQueue.size(); i++) {
             try {
                 connection = connectionQueue.take();
                 if (connection != null)
                     connection.close();
             } catch (InterruptedException e) {
-                throw new ConnectionPoolException("problem with  connection",e);
+                throw new ConnectionPoolException("problem with  connection", e);
             } catch (SQLException e) {
                 logger.error(e);
             }

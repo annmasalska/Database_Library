@@ -9,6 +9,6 @@ public class LogoutCommand implements Command {
     public String execute(HttpServletRequest request) {
 
         request.getSession().invalidate();
-        return ConfigManager.getProperty("path.page.index");
+        return ConfigManager.getProperty("path.page.home");
     }
 }
